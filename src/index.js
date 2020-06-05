@@ -1,10 +1,23 @@
-const getResours = async (url) =>{
-  const res = await  fetch(url);
-  const body = await res.json();
-  return body;
-};
+class  SwapiService {
+  _apiBase = 'https://swapi.dev/api'
+  async getResours(url) {
+    const res = await  fetch(`${this._apiBase}${url}`);
+    if (!res.ok) {
+      throw new Error(`Could not fatch ${url} ` + 
+      `, resived ${res.status}`)
+    }
+    return await res.json();
+  }
+  getAllPeople() {
+    return this.getResours(`/people/`);
+  }
+  getPerson(id) {
+    return this.getResours(`/people/${id}`);
+  }
+}
 
-getResours('https://swapi.dev/api/people/1')
-.then((body)=>{
-  console.log(body);
-});
+const swapi = new SwapiService();
+
+swapi.getAllPeople().then((body)=>{
+  console.log(body)
+})
